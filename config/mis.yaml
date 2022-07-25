@@ -1,0 +1,18 @@
+# 管理系统数据库的信息。可以不修改
+db:
+  host: db
+  port: 3306
+  user: root
+  password: mysqlrootpassword
+  dbName: scow
+
+# 获取作业相关配置
+fetchJobs:
+  # 源作业信息数据库的数据库信息
+  db:
+    host: sourcedb
+    port: 3307
+    user: root
+    password: jobtablepassword
+    dbName: jobs
+    tableName: jobs

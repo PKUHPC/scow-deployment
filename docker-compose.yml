@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+
+  gateway:
+    image: $IMAGE_BASE/gateway:$IMAGE_TAG
+    restart: unless-stopped
+    ports:
+      - ${PORT}:80
+
+  auth:
+    image: $IMAGE_BASE/auth:$IMAGE_TAG
+    restart: unless-stopped
+    volumes:
+      - ./config:/etc/scow
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  portal:
+    image: $IMAGE_BASE/portal-web-$PORTAL_IMAGE_POSTFIX:$IMAGE_TAG
+    volumes:
+      - "/etc/hosts:/etc/hosts"
+      - "./config:/etc/scow"
+      - "~/.ssh:/root/.ssh"
+    profiles: [ "portal" ]
+
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    volumes:
+      - "db_data:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MIS_DB_PASSWORD}
+    profiles: [ "mis" ]
+
+  mis-server:
+    image: $IMAGE_BASE/mis-server:$IMAGE_TAG
+    restart: unless-stopped
+    environment:
+      - DB_PASSWORD=${MIS_DB_PASSWORD}
+    volumes:
+      - "./config:/etc/scow"
+      - /root/.ssh:/root/.ssh
+    profiles: [ "mis" ]
+
+  mis-web:
+    image: $IMAGE_BASE/mis-web-$MIS_IMAGE_POSTFIX:$IMAGE_TAG
+    restart: unless-stopped
+    volumes:
+      - "./config:/etc/scow"
+    profiles: [ "mis" ]
+
+volumes:
+  db_data:
