@@ -18,8 +18,9 @@ services:
     image: redis:alpine
     restart: unless-stopped
 
-  portal:
+  portal-web:
     image: $IMAGE_BASE/portal-web-$PORTAL_IMAGE_POSTFIX:$IMAGE_TAG
+    restart: unless-stopped
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
