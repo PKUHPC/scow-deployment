@@ -30,5 +30,8 @@ predefinedChargingTypes:
 
 # 账户名的规则
 accountNamePattern:
+  # 正则表达式
   # regex: ""
+
+  # 出错时的消息
   # errorMessage: ""
