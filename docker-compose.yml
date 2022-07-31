@@ -44,6 +44,7 @@ services:
     environment:
       - DB_PASSWORD=${MIS_DB_PASSWORD}
     volumes:
+      - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
       - /root/.ssh:/root/.ssh
     profiles: [ "mis" ]
