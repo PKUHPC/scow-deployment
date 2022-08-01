@@ -20,10 +20,10 @@ services:
     restart: unless-stopped
 
   portal-web:
-    image: $IMAGE_BASE/portal-web-$PORTAL_IMAGE_POSTFIX:$IMAGE_TAG
+    image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - MIS_URL=${MIS_ROOT_URL-""}
+      - MIS_URL=${MIS_ROOT_URL-}
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
@@ -36,14 +36,14 @@ services:
     volumes:
       - "db_data:/var/lib/mysql"
     environment:
-      - MYSQL_ROOT_PASSWORD=${MIS_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MIS_DB_PASSWORD-}
     profiles: [ "mis" ]
 
   mis-server:
     image: $IMAGE_BASE/mis-server:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - DB_PASSWORD=${MIS_DB_PASSWORD}
+      - DB_PASSWORD=${MIS_DB_PASSWORD-}
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
@@ -51,10 +51,10 @@ services:
     profiles: [ "mis" ]
 
   mis-web:
-    image: $IMAGE_BASE/mis-web-$MIS_IMAGE_POSTFIX:$IMAGE_TAG
+    image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - PORTAL_URL=${PORTAL_ROOT_URL-""}
+      - PORTAL_URL=${PORTAL_ROOT_URL-}
     volumes:
       - "./config:/etc/scow"
     profiles: [ "mis" ]
