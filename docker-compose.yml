@@ -12,6 +12,7 @@ services:
     image: $IMAGE_BASE/auth:$IMAGE_TAG
     restart: unless-stopped
     volumes:
+      - /etc/hosts:/etc/hosts
       - ./config:/etc/scow
 
   redis:
