@@ -35,4 +35,4 @@ web:
     method: POST
     path: /login
     formData:
-      password: "{PASSWORD}"
+      password: "{{ PASSWORD }}"
