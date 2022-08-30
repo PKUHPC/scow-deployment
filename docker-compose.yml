@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     ports:
       - ${PORT}:80
+    environment:
+      - PORTAL_PATH=${PORTAL_BASE_PATH-/}
+      - MIS_PATH=${MIS_BASE_PATH-/mis}
 
   auth:
     image: $IMAGE_BASE/auth:$IMAGE_TAG
@@ -15,7 +18,7 @@ services:
       - /etc/hosts:/etc/hosts
       - ./config:/etc/scow
     environment:
-      - BASE_PATH=${BASE_PATH-}
+      - BASE_PATH=${BASE_PATH}
 
   redis:
     image: redis:alpine
@@ -25,7 +28,8 @@ services:
     image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - MIS_URL=${MIS_BASE_PATH-}
+      - MIS_URL=${BASE_PATH}${MIS_BASE_PATH-}
+      - BASE_PATH=${BASE_PATH}
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
@@ -56,7 +60,8 @@ services:
     image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - PORTAL_URL=${PORTAL_BASE_PATH-}
+      - PORTAL_URL=${BASE_PATH}${PORTAL_BASE_PATH-}
+      - BASE_PATH=${BASE_PATH}
     volumes:
       - "./config:/etc/scow"
     profiles: [ "mis" ]
