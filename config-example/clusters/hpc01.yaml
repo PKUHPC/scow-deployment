@@ -53,5 +53,5 @@ slurm:
     scriptPath: /test/slurm.sh
     # slurmdbd的数据库密码
     dbPassword: password
-    # slurm accounting功能中，保存user_association信息的数据库的表名
-    associationTableName: user_association
+    # 这个集群在slurm中的集群名字
+    clusterName: pkuhpc
