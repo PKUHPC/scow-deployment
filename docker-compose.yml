@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
 
   portal-web:
-    image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-}:$IMAGE_TAG
+    image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
       - MIS_URL=${BASE_PATH}${MIS_BASE_PATH-}
@@ -57,7 +57,7 @@ services:
     profiles: [ "mis" ]
 
   mis-web:
-    image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-}:$IMAGE_TAG
+    image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
       - PORTAL_URL=${BASE_PATH}${PORTAL_BASE_PATH-}
