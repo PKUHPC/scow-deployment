@@ -8,8 +8,9 @@ services:
     ports:
       - ${PORT}:80
     environment:
-      - PORTAL_PATH=${PORTAL_BASE_PATH-/}
-      - MIS_PATH=${MIS_BASE_PATH-/mis}
+      - BASE_PATH=${BASE_PATH}
+      - PORTAL_PATH=${PORTAL_BASE_PATH-}
+      - MIS_PATH=${MIS_BASE_PATH-mis}
 
   auth:
     image: $IMAGE_BASE/auth:$IMAGE_TAG
@@ -28,6 +29,7 @@ services:
     image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
+      - MIS_DEPLOYED=${MIS_DEPLOYED-false}
       - MIS_URL=${BASE_PATH}${MIS_BASE_PATH-}
       - BASE_PATH=${BASE_PATH}
     volumes:
@@ -60,6 +62,7 @@ services:
     image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
+      - PORTAL_DEPLOYED=${PORTAL_DEPLOYED-false}
       - PORTAL_URL=${BASE_PATH}${PORTAL_BASE_PATH-}
       - BASE_PATH=${BASE_PATH}
     volumes:
