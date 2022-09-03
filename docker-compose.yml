@@ -7,6 +7,10 @@ services:
     restart: unless-stopped
     ports:
       - ${PORT}:80
+    environment:
+      - BASE_PATH=${BASE_PATH}
+      - PORTAL_PATH=${PORTAL_BASE_PATH-}
+      - MIS_PATH=${MIS_BASE_PATH-mis}
 
   auth:
     image: $IMAGE_BASE/auth:$IMAGE_TAG
@@ -14,16 +18,20 @@ services:
     volumes:
       - /etc/hosts:/etc/hosts
       - ./config:/etc/scow
+    environment:
+      - BASE_PATH=${BASE_PATH}
 
   redis:
     image: redis:alpine
     restart: unless-stopped
 
   portal-web:
-    image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-}:$IMAGE_TAG
+    image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - MIS_URL=${MIS_ROOT_URL-}
+      - MIS_DEPLOYED=${MIS_DEPLOYED-false}
+      - MIS_URL=${MIS_BASE_PATH-}
+      - BASE_PATH=${BASE_PATH}
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
@@ -51,10 +59,12 @@ services:
     profiles: [ "mis" ]
 
   mis-web:
-    image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-}:$IMAGE_TAG
+    image: $IMAGE_BASE/mis-web-${MIS_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
     environment:
-      - PORTAL_URL=${PORTAL_ROOT_URL-}
+      - PORTAL_DEPLOYED=${PORTAL_DEPLOYED-false}
+      - PORTAL_URL=${PORTAL_BASE_PATH-}
+      - BASE_PATH=${BASE_PATH}
     volumes:
       - "./config:/etc/scow"
     profiles: [ "mis" ]
