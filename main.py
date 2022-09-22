@@ -246,5 +246,5 @@ if __name__ == '__main__':
     com_json = json.dumps(com.__dict__)
     str_json = json.loads(com_json)
 
-    with open("test.json", "w") as json_file:
+    with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
