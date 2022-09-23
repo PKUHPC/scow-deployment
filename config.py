@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # 整个系统的入口端口
 PORT = 80
 
