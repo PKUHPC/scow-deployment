@@ -59,16 +59,21 @@ def generate_gateway_service():
     ports = [str(config.PORT) + ":80"]
     gateway['ports'] = ports
 
-    portal_base_path = ""
+    portal_base_path = "/"
     # config.PORTAL_BASE_PATH 未定义
-    if 'config.PORTAL_BASE_PATH' in locals().keys():
+    try:
         if configItemIsNotNul(config.PORTAL_BASE_PATH):
             portal_base_path = config.PORTAL_BASE_PATH
+    except AttributeError as e:
+        print(e.args)
 
-    mis_base_path = "mis"
-    if 'config.MIS_BASE_PATH' in locals().keys():
+    mis_base_path = "/mis"
+    try:
         if configItemIsNotNul(config.MIS_BASE_PATH):
             mis_base_path = config.MIS_BASE_PATH
+    except AttributeError as e:
+        print(e.args)
+
     environment = ["BASE_PATH=" + config.BASE_PATH, "PORTAL_PATH=" + portal_base_path, "MIS_PATH=" + mis_base_path]
     gateway['environment'] = environment
 
@@ -125,10 +130,13 @@ def generate_portal_web_service():
     else:
         mis_deployed = "false"
 
-    mis_base_path = "mis"
-    if 'config.MIS_BASE_PATH' in locals().keys():
+    mis_base_path = "/mis"
+    try:
         if configItemIsNotNul(config.MIS_BASE_PATH):
             mis_base_path = config.MIS_BASE_PATH
+    except AttributeError as e:
+        print(e.args)
+
     environment = ["BASE_PATH=" + config.BASE_PATH, "MIS_URL=" + mis_base_path, "MIS_DEPLOYED=" + mis_deployed]
     portal_web['environment'] = environment
 
@@ -194,10 +202,13 @@ def generate_mis_web_service():
     else:
         portal_deployed = "false"
 
-    portal_base_path = ""
-    if 'config.PORTAL_BASE_PATH' in locals().keys():
+    portal_base_path = "/"
+    try:
         if configItemIsNotNul(config.PORTAL_BASE_PATH):
             portal_base_path = config.PORTAL_BASE_PATH
+    except AttributeError as e:
+        print(e.args)
+
     environment = ["BASE_PATH=" + config.BASE_PATH, "PORTAL_URL=" + portal_base_path,
                    "PORTAL_DEPLOYED=" + portal_deployed]
     mis_web['environment'] = environment
