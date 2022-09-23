@@ -184,7 +184,7 @@ def generate_mis_web_service():
     mis_image_postfix = "root"
     if configItemIsNotNul(config.MIS_IMAGE_POSTFIX):
         mis_image_postfix = config.MIS_IMAGE_POSTFIX
-    image = config.IMAGE_BASE + "/portal-web-" + mis_image_postfix + ":" + config.IMAGE_TAG
+    image = config.IMAGE_BASE + "/mis-web-" + mis_image_postfix + ":" + config.IMAGE_TAG
     mis_web['image'] = image
 
     mis_web['restart'] = "unless-stopped"

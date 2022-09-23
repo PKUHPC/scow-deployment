@@ -1,2 +1,10 @@
 .env
 config
+/docker-compose.json
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/scow-deployment.iml
+/.idea/vcs.xml

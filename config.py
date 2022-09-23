@@ -23,7 +23,7 @@ PORTAL_IMAGE_POSTFIX = "root"
 
 # 管理系统部署根路径和镜像后缀
 # 如果不部署请将MIS_DEPLOYED设置为False
-MIS_DEPLOYED = False
+MIS_DEPLOYED = True
 MIS_BASE_PATH = "/mis"
 MIS_IMAGE_POSTFIX = "mis"
 
@@ -31,7 +31,7 @@ MIS_IMAGE_POSTFIX = "mis"
 MIS_DB_PASSWORD = "must!chang3this"
 
 # 是否使用fluentd收集日志
-FLUENTD_DEPLOYED = False
+FLUENTD_DEPLOYED = True
 # fluentd收集日志的目录
 LOG_DIR = "/var/logs/fluentd"
 
