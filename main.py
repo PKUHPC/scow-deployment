@@ -79,6 +79,7 @@ def generate_gateway_service():
 
     if config.FLUENTD_DEPLOYED:
         gateway["logging"] = generate_log_driver("gateway")
+        gateway["depends_on"] = ["log"]
     return gateway
 
 
@@ -98,6 +99,7 @@ def generate_auth_service():
 
     if config.FLUENTD_DEPLOYED:
         auth["logging"] = generate_log_driver("auth")
+        auth["depends_on"] = ["log"]
     return auth
 
 
@@ -111,6 +113,7 @@ def generate_redis_service():
 
     if config.FLUENTD_DEPLOYED:
         redis["logging"] = generate_log_driver("redis")
+        redis["depends_on"] = ["log"]
     return redis
 
 
@@ -145,6 +148,7 @@ def generate_portal_web_service():
 
     if config.FLUENTD_DEPLOYED:
         portal_web["logging"] = generate_log_driver("portal-web")
+        portal_web["depends_on"] = ["log"]
     return portal_web
 
 
@@ -164,6 +168,7 @@ def generate_db_service():
 
     if config.FLUENTD_DEPLOYED:
         mysqldb["logging"] = generate_log_driver("db")
+        mysqldb["depends_on"] = ["log"]
     return mysqldb
 
 
@@ -183,6 +188,7 @@ def generate_mis_service():
 
     if config.FLUENTD_DEPLOYED:
         mis_service["logging"] = generate_log_driver("mis_service")
+        mis_service["depends_on"] = ["log"]
     return mis_service
 
 
@@ -218,6 +224,7 @@ def generate_mis_web_service():
 
     if config.FLUENTD_DEPLOYED:
         mis_web["logging"] = generate_log_driver("mis_web")
+        mis_web["depends_on"] = ["log"]
     return mis_web
 
 
