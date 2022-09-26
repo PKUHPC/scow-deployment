@@ -16,47 +16,23 @@ docker-compose -f docker-compose.json up -d
 docker-compose -f docker-compose.json down
 ```
 ## 参数说明
-可自定义参数详见config.py
-```python
-# encoding: utf-8
+自定义参数详见config.py
 
-# 整个系统的入口端口
-PORT = 80
-
-# 镜像信息
-# 如果在构建时修改了镜像名和TAG请在这里对应修改
-# 如果在构建时没有修改则忽略
-IMAGE_BASE = "ghcr.io/pkuhpc/scow"
-IMAGE_TAG = "master"
-
-# 整个系统的部署根路径。以/开头，不要以/结尾，如果是根路径写空格
-BASE_PATH = ""
-
-# 门户系统部署根路径和镜像后缀。
-# 如果是根路径，“/”；如果不是根路径，以/开头，不要以/结尾
-# 即如果BASE_PATH为/root1，PORTAL_BASE_PATH为root2，那么最终访问portal的路径是/root1/root2
-# 下面管理系统相同
-# 如果不部署请将PORTAL_DEPLOYED设置为False
-PORTAL_DEPLOYED = True
-PORTAL_BASE_PATH = "/"
-PORTAL_IMAGE_POSTFIX = "root"
-
-# 管理系统部署根路径和镜像后缀
-# 如果不部署请将MIS_DEPLOYED设置为False
-MIS_DEPLOYED = True
-MIS_BASE_PATH = "/mis"
-MIS_IMAGE_POSTFIX = "mis"
-
-# 管理系统数据库密码。如不部署可以忽略
-MIS_DB_PASSWORD = "must!chang3this"
-
-# 是否使用fluentd收集日志
-FLUENTD_DEPLOYED = True
-# fluentd收集日志的目录，若目录不存在会自动创建
-LOG_DIR = "/var/log/fluentd"
-
-
-```
+|       参数名称       |                          参数说明                          |
+| :------------------: | :--------------------------------------------------------: |
+|         PORT         |                     整个系统的入口端口                     |
+|      IMAGE_BASE      |                        镜像仓库地址                        |
+|      IMAGE_TAG       |                          镜像tag                           |
+|      BASE_PATH       |                    整个系统的部署根路径                    |
+|   PORTAL_DEPLOYED    |      门户系统部署开关：True表示部署，False表示不部署       |
+|   PORTAL_BASE_PATH   |                        门户访问路径                        |
+| PORTAL_IMAGE_POSTFIX |                      门户系统镜像后缀                      |
+|     MIS_DEPLOYED     |      管理系统部署开关：True表示部署，False表示不部署       |
+|    MIS_BASE_PATH     |                      管理系统访问路径                      |
+| PORTAL_IMAGE_POSTFIX |                      管理系统镜像后缀                      |
+|   MIS_DB_PASSWORD    |                     管理系统数据库密码                     |
+|   FLUENTD_DEPLOYED   | fluentd日志收集服务部署开关：True表示部署，False表示不部署 |
+|       LOG_DIR        |                   fluentd收集日志的目录                    |
 
 ## 连接至管理系统数据库
 
