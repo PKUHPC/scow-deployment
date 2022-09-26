@@ -163,7 +163,7 @@ def generate_db_service():
     volumes = ["db_data:/var/lib/mysql"]
     mysqldb['volumes'] = volumes
 
-    environment = ["DB_PASSWORD=" + config.MIS_DB_PASSWORD]
+    environment = ["MYSQL_ROOT_PASSWORD=" + config.MIS_DB_PASSWORD]
     mysqldb['environment'] = environment
 
     if config.FLUENTD_DEPLOYED:
