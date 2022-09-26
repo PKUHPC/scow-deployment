@@ -4,6 +4,8 @@ import json
 
 import config
 
+import os
+
 
 class Compose:
     def __init__(self, services, volumes):
@@ -42,6 +44,9 @@ def generate_log_service():
     log['ports'] = ports
 
     log_dir = config.LOG_DIR
+    os.system('mkdir -p ' + log_dir)
+    os.system('chmod +777 ' + log_dir)
+
     volumes = [log_dir + ":/fluentd/log", "./fluent.conf:/fluentd/etc/fluent.conf"]
     log['volumes'] = volumes
 
@@ -260,8 +265,9 @@ def generate_service():
 if __name__ == '__main__':
     svc = generate_service()
 
-    data = {"db_data": None}
-
+    data = dict()
+    # data = {"db_data": None}
+    data["db_data"] = dict()
     com = Compose(svc, data)
     com_json = json.dumps(com.__dict__)
     str_json = json.loads(com_json)
