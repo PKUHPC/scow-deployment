@@ -274,3 +274,5 @@ if __name__ == '__main__':
 
     with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
+
+    print("Docker compose file generated successfully! ")
