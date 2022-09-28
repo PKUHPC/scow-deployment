@@ -3,7 +3,7 @@
 https://pkuhpc.github.io/SCOW/docs/common/deployment
 
 
-## 生成 Docker compose文件
+## 生成 Docker compose文件和db.sh文件
 ```shell
 python main.py
 ```
