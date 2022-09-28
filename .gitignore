@@ -8,3 +8,4 @@ config
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/scow-deployment.iml
 /.idea/vcs.xml
+/db.sh
