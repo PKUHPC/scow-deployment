@@ -18,7 +18,7 @@ BASE_PATH = ""
 # 下面管理系统相同
 # 如果不部署请将PORTAL_DEPLOYED设置为False
 PORTAL_DEPLOYED = True
-PORTAL_BASE_PATH = "/"
+PORTAL_BASE_PATH = ""
 PORTAL_IMAGE_POSTFIX = "root"
 
 # 管理系统部署根路径和镜像后缀

@@ -64,7 +64,7 @@ def generate_gateway_service():
     ports = [str(config.PORT) + ":80"]
     gateway['ports'] = ports
 
-    portal_base_path = "/"
+    portal_base_path = ""
     # config.PORTAL_BASE_PATH 未定义
     try:
         if configItemIsNotNul(config.PORTAL_BASE_PATH):
@@ -213,7 +213,7 @@ def generate_mis_web_service():
     else:
         portal_deployed = "false"
 
-    portal_base_path = "/"
+    portal_base_path = ""
     try:
         if configItemIsNotNul(config.PORTAL_BASE_PATH):
             portal_base_path = config.PORTAL_BASE_PATH
