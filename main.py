@@ -259,6 +259,13 @@ def generate_service():
         service["mis-server"] = ms
         service["mis-web"] = mw
 
+        ## 生成 db.sh文件
+        file = open('db.sh', 'w')
+        db_passwd = config.MIS_DB_PASSWORD
+        file.write('docker compose exec db mysql -hlocalhost -P3306 -uroot -p"' + db_passwd + '" '
+                   '--default-character-set=utf8mb4')
+        os.system('chmod +777 db.sh')
+
     return service
 
 
@@ -275,4 +282,4 @@ if __name__ == '__main__':
     with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
 
-    print("Docker compose file generated successfully! ")
+    print("File generated successfully! ")
