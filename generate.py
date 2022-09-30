@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import json
 import os
 import stat
@@ -20,7 +22,6 @@ class Service:
             self.add_logging()
         else:
             self.depends_on = None
-            print("")
 
     def add_logging(self):
         self.logging = {
@@ -221,7 +222,7 @@ def create_files():
     com_json = json.dumps(dc.__dict__, skipkeys=True)
     str_json = json.loads(com_json)
     # 生成compose文件
-    with open("test.json", "w") as json_file:
+    with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
     return files
 
