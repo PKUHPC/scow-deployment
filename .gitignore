@@ -11,3 +11,4 @@ config
 /db.sh
 /config.py.bak
 /test.json
+/config.py
