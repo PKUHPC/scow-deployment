@@ -94,8 +94,13 @@ def generate_path(p):
 
 
 def create_log_service():
-    # 创建日志收集目录
-    os.mkdir(cfg.FLUENTD["LOG_DIR"])
+    # 创建日志收集目录 mkdir -p ***
+    try:
+        os.makedirs(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
+        print("log dir created successfully!")
+    except OSError:
+        print("log dir already exists!")
+
     os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
 
     log_ports = [("24224", "24224"), ("24224", "24224/udp")]
@@ -110,7 +115,7 @@ def create_log_service():
 def create_gateway_service():
     gw_ports = [("80", "80")]
     gw_env = {
-        "BASE_PATH":  generate_path(cfg.COMMON),
+        "BASE_PATH": generate_path(cfg.COMMON),
         "PORTAL_PATH": generate_path(cfg.PORTAL),
         "MIS_PATH": generate_path(cfg.MIS)
     }
@@ -180,7 +185,7 @@ def create_mis_web_service():
     mv_volumes = {
         "./config": "/etc/scow",
     }
-    mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None,  dict_to_array(mv_volumes),
+    mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, dict_to_array(mv_volumes),
                       dict_to_array(mv_env))
     return mis_web
 
