@@ -5,6 +5,8 @@ https://pkuhpc.github.io/SCOW/docs/common/deployment
 
 ## 生成 Docker compose文件和db.sh文件
 ```shell
+cp config-example.py config.py
+
 python main.py
 ```
 ## 部署与卸载
