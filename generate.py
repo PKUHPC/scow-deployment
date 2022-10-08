@@ -88,7 +88,10 @@ def generate_image(name, postfix):
 
 def generate_path(p):
     if p:
-        return "" if p["BASE_PATH"] == "/" else p["BASE_PATH"]
+        if p["BASE_PATH"] != "/" and (p["BASE_PATH"].isspace() or p["BASE_PATH"].endswith("/") or not p["BASE_PATH"].startswith("/")):
+            raise Exception("path should start with '/' and cannot end with '/' or be empty ")
+        else:
+            return "" if p["BASE_PATH"] == "/" else p["BASE_PATH"]
     else:
         return ""
 
