@@ -98,11 +98,11 @@ def generate_path(p):
 
 def create_log_service():
     # 创建日志收集目录 mkdir -p ***
-    try:
+    if os.path.exists(cfg.FLUENTD["LOG_DIR"]):
+        print("log dir already exists!")
+    else:
         os.makedirs(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
         print("log dir created successfully!")
-    except OSError:
-        print("log dir already exists!")
 
     os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
 
