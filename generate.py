@@ -3,7 +3,6 @@
 import json
 import os
 import stat
-
 import config as cfg
 
 
@@ -12,9 +11,9 @@ class Service:
         self.name = name
         self.image = image
         self.restart = "unless-stopped"
-        self.ports = ports
-        self.volumes = volumes
-        self.environment = environment
+        self.ports = tuple_to_array(ports)
+        self.volumes = dict_to_array(volumes)
+        self.environment = dict_to_array(environment, True)
         self.logging = None
         self.depends_on = ["log"]
         if cfg.FLUENTD and self.name != "log":
@@ -64,7 +63,14 @@ def clear_dict(d):
         return r
 
 
+FLUENTD_IMAGE_TAG = "v1.14.0-1.0"
+REDIS_IMAGE_TAG = "alpine"
+MYSQL_IMAGE_TAG = "8"
+
+
 def tuple_to_array(t):
+    if t is None:
+        return None
     arr = []
     for term in t:
         arr.append(term[0] + ":" + term[1])
@@ -72,6 +78,8 @@ def tuple_to_array(t):
 
 
 def dict_to_array(d, *p):
+    if d is None:
+        return None
     arr = []
     is_env = p[0] if len(p) > 0 else False
     for key in d:
@@ -115,7 +123,7 @@ def create_log_service():
         cfg.FLUENTD["LOG_DIR"]: "/fluentd/log",
         "./fluent/fluent.conf": "/fluentd/etc/fluent.conf"
     }
-    log = Service("log", "fluentd:v1.14.0-1.0", tuple_to_array(log_ports), dict_to_array(log_volumes), None)
+    log = Service("log", "fluentd:" + FLUENTD_IMAGE_TAG, log_ports, log_volumes, None)
     return log
 
 
@@ -126,7 +134,7 @@ def create_gateway_service():
         "PORTAL_PATH": generate_path(cfg.PORTAL),
         "MIS_PATH": generate_path(cfg.MIS)
     }
-    gateway = Service("gateway", generate_image("gateway", None), tuple_to_array(gw_ports), None, dict_to_array(gw_env))
+    gateway = Service("gateway", generate_image("gateway", None), gw_ports, None, gw_env)
     return gateway
 
 
@@ -138,7 +146,7 @@ def create_auth_service():
         "/etc/hosts": "/etc/hosts",
         "./config": "/etc/scow"
     }
-    auth = Service("auth", generate_image("auth", None), None, dict_to_array(au_volumes), dict_to_array(au_env))
+    auth = Service("auth", generate_image("auth", None), None, au_volumes, au_env)
     return auth
 
 
@@ -154,7 +162,7 @@ def create_portal_web_service():
         "~/.ssh": "/root/.ssh"
     }
     portal_web = Service("portal-web", generate_image("portal-web", cfg.PORTAL["IMAGE_POSTFIX"]), None,
-                         dict_to_array(pw_volumes), dict_to_array(pw_env))
+                         pw_volumes, pw_env)
     return portal_web
 
 
@@ -165,7 +173,7 @@ def create_db_service():
     db_env = {
         "MYSQL_ROOT_PASSWORD": cfg.MIS["DB_PASSWORD"]
     }
-    db = Service("db", "mysql:8", None, dict_to_array(db_volumes), dict_to_array(db_env))
+    db = Service("db", "mysql:" + MYSQL_IMAGE_TAG, None, db_volumes, db_env)
     return db
 
 
@@ -178,8 +186,7 @@ def create_mis_server_service():
         "./config": "/etc/scow",
         "~/.ssh": "/root/.ssh"
     }
-    mis_server = Service("mis-server", generate_image("mis-server", None), None, dict_to_array(ms_volumes),
-                         dict_to_array(ms_env))
+    mis_server = Service("mis-server", generate_image("mis-server", None), None, ms_volumes, ms_env)
     return mis_server
 
 
@@ -192,8 +199,7 @@ def create_mis_web_service():
     mv_volumes = {
         "./config": "/etc/scow",
     }
-    mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, dict_to_array(mv_volumes),
-                      dict_to_array(mv_env))
+    mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, mv_volumes, mv_env)
     return mis_web
 
 
@@ -205,7 +211,7 @@ def create_services():
 
     com.add_service(create_gateway_service())
     com.add_service(create_auth_service())
-    com.add_service(Service("redis", "redis:alpine", None, None, None))
+    com.add_service(Service("redis", "redis:" + REDIS_IMAGE_TAG, None, None, None))
 
     if cfg.PORTAL:
         com.add_service(create_portal_web_service())
