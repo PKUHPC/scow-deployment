@@ -12,3 +12,4 @@ config
 /config.py.bak
 /test.json
 /config.py
+/__pycache__

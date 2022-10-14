@@ -4,7 +4,6 @@ import json
 import os
 import stat
 
-import config
 import config as cfg
 
 
@@ -72,10 +71,14 @@ def tuple_to_array(t):
     return arr
 
 
-def dict_to_array(d):
+def dict_to_array(d, *p):
     arr = []
+    is_env = p[0] if len(p) > 0 else False
     for key in d:
-        arr.append(key + ":" + d[key])
+        if is_env:
+            arr.append(key + "=" + d[key])
+        else:
+            arr.append(key + ":" + d[key])
     return arr
 
 
@@ -88,7 +91,8 @@ def generate_image(name, postfix):
 
 def generate_path(p):
     if p:
-        if p["BASE_PATH"] != "/" and (p["BASE_PATH"].isspace() or p["BASE_PATH"].endswith("/") or not p["BASE_PATH"].startswith("/")):
+        if p["BASE_PATH"] != "/" and (
+                p["BASE_PATH"].isspace() or p["BASE_PATH"].endswith("/") or not p["BASE_PATH"].startswith("/")):
             raise Exception("path should start with '/' and cannot end with '/' or be empty ")
         else:
             return "" if p["BASE_PATH"] == "/" else p["BASE_PATH"]
@@ -220,7 +224,7 @@ def create_files():
         files = files + " and db.sh generated successfully!"
         # 生成 db.sh文件
         with open("db.sh", "w") as file:
-            db_passwd = config.MIS["DB_PASSWORD"]
+            db_passwd = cfg.MIS["DB_PASSWORD"]
             file.write("docker-compose -f docker-compose.json exec db mysql -uroot -p'" + db_passwd + "'")
             os.chmod("db.sh", stat.S_IRWXO)
     else:
@@ -237,4 +241,5 @@ def create_files():
 
 if __name__ == "__main__":
     print_info = create_files()
+
     print(print_info)
