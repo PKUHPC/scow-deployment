@@ -129,10 +129,10 @@ def create_log_service():
     if os.path.exists(cfg.FLUENTD["LOG_DIR"]):
         print("log dir already exists!")
     else:
-        os.makedirs(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
+        os.makedirs(cfg.FLUENTD["LOG_DIR"])
         print("log dir created successfully!")
 
-    os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXO)
+    os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXU | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
 
     log_ports = [("24224", "24224"), ("24224", "24224/udp")]
     log_volumes = {
