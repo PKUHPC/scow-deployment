@@ -14,10 +14,10 @@ cp config-example.py config.py
 python generate.py
 ```
 
-## 部署与停止服务
+## 服务启动与停止
 
 ```shell
-# 部署
+# 启动服务
 sh compose.sh up -d
 
 # 停止服务

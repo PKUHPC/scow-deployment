@@ -248,11 +248,14 @@ def cmd_is_exist(cmd):
         return False
 
 
+def chmod_shell_script(script_name):
+    os.chmod(script_name, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+
+
 def create_files():
     files = "docker-compose.json, compose.sh "
-
+    cmd_str = ""
     with open("compose.sh", "w") as file:
-        cmd_str = ""
         if cmd_is_exist("docker compose"):
             cmd_str = "docker compose"
         elif cmd_is_exist("docker-compose"):
@@ -262,15 +265,15 @@ def create_files():
                             "https://docs.docker.com/compose/install/linux/#install-the-plugin-manually")
 
         file.write(cmd_str + " -f docker-compose.json $@")
-        os.chmod('compose.sh', stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+        chmod_shell_script("compose.sh")
 
     if cfg.MIS:
         files = files + " and db.sh generated successfully!"
         # 生成 db.sh文件
         with open("db.sh", "w") as file:
             db_passwd = cfg.MIS["DB_PASSWORD"]
-            file.write("docker-compose -f docker-compose.json exec db mysql -uroot -p'" + db_passwd + "'")
-            os.chmod('db.sh', stat.S_IRWXU | stat.S_IXGRP | stat.S_IXOTH | stat.S_IRGRP | stat.S_IROTH)
+            file.write(cmd_str + " -f docker-compose.json exec db mysql -uroot -p'" + db_passwd + "'")
+            chmod_shell_script("db.sh")
     else:
         files = files + " generated successfully!"
 
