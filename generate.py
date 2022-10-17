@@ -132,7 +132,7 @@ def create_log_service():
         os.makedirs(cfg.FLUENTD["LOG_DIR"])
         print("log dir created successfully!")
 
-    os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXU | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+    os.chmod(cfg.FLUENTD["LOG_DIR"], stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
     log_ports = [("24224", "24224"), ("24224", "24224/udp")]
     log_volumes = {
