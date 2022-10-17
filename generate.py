@@ -4,6 +4,7 @@ import json
 import os
 import stat
 import config as cfg
+import subprocess
 
 
 class Service:
@@ -239,8 +240,30 @@ def create_services():
     return com
 
 
+def cmd_is_exist(cmd):
+    try:
+        subprocess.check_output(cmd, shell=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 def create_files():
-    files = "docker-compose.json"
+    files = "docker-compose.json, compose.sh "
+
+    with open("compose.sh", "w") as file:
+        cmd_str = ""
+        if cmd_is_exist("docker compose"):
+            cmd_str = "docker compose"
+        elif cmd_is_exist("docker-compose"):
+            cmd_str = "docker-compose"
+        else:
+            raise Exception("Docker Compose is not installed, refer to this connection for installation: "
+                            "https://docs.docker.com/compose/install/linux/#install-the-plugin-manually")
+
+        file.write(cmd_str + " -f docker-compose.json $@")
+        os.chmod('compose.sh', stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+
     if cfg.MIS:
         files = files + " and db.sh generated successfully!"
         # 生成 db.sh文件
@@ -257,6 +280,9 @@ def create_files():
     # 生成compose文件
     with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
+
+
+
     return files
 
 
