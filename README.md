@@ -2,7 +2,7 @@
 
 https://pkuhpc.github.io/SCOW/docs/common/deployment
 
-## 生成 Docker compose 文件和 db.sh 文件
+## 生成 Docker compose 文件、compose.sh文件和 db.sh 文件
 
 ```shell
 # 1. 复制配置文件
@@ -18,10 +18,10 @@ python generate.py
 
 ```shell
 # 部署
-docker-compose -f docker-compose.json up -d
+sh compose.sh up -d
 
 # 卸载
-docker-compose -f docker-compose.json down
+sh compose.sh down
 ```
 
 ## 参数说明
