@@ -97,13 +97,28 @@ def generate_image(name, postfix):
         return cfg.COMMON["IMAGE_BASE"] + "/" + name + "-" + postfix + ":" + cfg.COMMON["IMAGE_TAG"]
 
 
-def generate_path(p):
+def generate_path_common(p, is_common):
     if p:
         if p["BASE_PATH"] != "/" and (
                 p["BASE_PATH"].isspace() or p["BASE_PATH"].endswith("/") or not p["BASE_PATH"].startswith("/")):
             raise Exception("path should start with '/' and cannot end with '/' or be empty ")
         else:
-            return "" if p["BASE_PATH"] == "/" else p["BASE_PATH"]
+            ret = "" if is_common else "/"
+            return ret if p["BASE_PATH"] == "/" else p["BASE_PATH"]
+    else:
+        return ""
+
+
+def generate_path(p, s):
+    if p:
+        if "BASE_PATH" not in p.keys():
+            if s == "MIS":
+                return "/mis"
+            elif s == "PORTAL":
+                return "/"
+            else:
+                raise Exception("parameter error")
+        return generate_path_common(p, False)
     else:
         return ""
 
@@ -130,9 +145,9 @@ def create_log_service():
 def create_gateway_service():
     gw_ports = [("80", "80")]
     gw_env = {
-        "BASE_PATH": generate_path(cfg.COMMON),
-        "PORTAL_PATH": generate_path(cfg.PORTAL),
-        "MIS_PATH": generate_path(cfg.MIS)
+        "BASE_PATH": generate_path_common(cfg.COMMON, True),
+        "PORTAL_PATH": generate_path(cfg.PORTAL, "PORTAL"),
+        "MIS_PATH": generate_path(cfg.MIS, "MIS")
     }
     gateway = Service("gateway", generate_image("gateway", None), gw_ports, None, gw_env)
     return gateway
@@ -140,7 +155,7 @@ def create_gateway_service():
 
 def create_auth_service():
     au_env = {
-        "BASE_PATH": generate_path(cfg.COMMON)
+        "BASE_PATH": generate_path_common(cfg.COMMON, True)
     }
     au_volumes = {
         "/etc/hosts": "/etc/hosts",
@@ -152,8 +167,8 @@ def create_auth_service():
 
 def create_portal_web_service():
     pw_env = {
-        "BASE_PATH": generate_path(cfg.COMMON),
-        "MIS_URL": generate_path(cfg.MIS),
+        "BASE_PATH": generate_path_common(cfg.COMMON, True),
+        "MIS_URL": generate_path(cfg.MIS, "MIS"),
         "MIS_DEPLOYED": "true" if cfg.MIS else "false"
     }
     pw_volumes = {
@@ -192,8 +207,8 @@ def create_mis_server_service():
 
 def create_mis_web_service():
     mv_env = {
-        "BASE_PATH": generate_path(cfg.COMMON),
-        "PORTAL_URL": generate_path(cfg.PORTAL),
+        "BASE_PATH": generate_path_common(cfg.COMMON, True),
+        "PORTAL_URL": generate_path(cfg.PORTAL, "PORTAL"),
         "PORTAL_DEPLOYED": "true" if cfg.PORTAL else "false"
     }
     mv_volumes = {
@@ -232,7 +247,7 @@ def create_files():
         with open("db.sh", "w") as file:
             db_passwd = cfg.MIS["DB_PASSWORD"]
             file.write("docker-compose -f docker-compose.json exec db mysql -uroot -p'" + db_passwd + "'")
-            os.chmod("db.sh", stat.S_IRWXO)
+            os.chmod('db.sh', stat.S_IRWXU | stat.S_IXGRP | stat.S_IXOTH | stat.S_IRGRP | stat.S_IROTH)
     else:
         files = files + " generated successfully!"
 
