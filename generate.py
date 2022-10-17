@@ -78,16 +78,16 @@ def tuple_to_array(t):
     return arr
 
 
-def dict_to_array(d, *p):
-    if d is None:
+def dict_to_array(dict_data, *parameter):
+    if dict_data is None:
         return None
     arr = []
-    is_env = p[0] if len(p) > 0 else False
-    for key in d:
+    is_env = parameter[0] if len(parameter) > 0 else False
+    for key in dict_data:
         if is_env:
-            arr.append(key + "=" + d[key])
+            arr.append(key + "=" + dict_data[key])
         else:
-            arr.append(key + ":" + d[key])
+            arr.append(key + ":" + dict_data[key])
     return arr
 
 
@@ -98,28 +98,28 @@ def generate_image(name, postfix):
         return cfg.COMMON["IMAGE_BASE"] + "/" + name + "-" + postfix + ":" + cfg.COMMON["IMAGE_TAG"]
 
 
-def generate_path_common(p, is_common):
-    if p:
-        if p["BASE_PATH"] != "/" and (
-                p["BASE_PATH"].isspace() or p["BASE_PATH"].endswith("/") or not p["BASE_PATH"].startswith("/")):
+def generate_path_common(property_data, is_common):
+    if property_data:
+        if property_data["BASE_PATH"] != "/" and (
+                property_data["BASE_PATH"].isspace() or property_data["BASE_PATH"].endswith("/") or not property_data["BASE_PATH"].startswith("/")):
             raise Exception("path should start with '/' and cannot end with '/' or be empty ")
         else:
             ret = "" if is_common else "/"
-            return ret if p["BASE_PATH"] == "/" else p["BASE_PATH"]
+            return ret if property_data["BASE_PATH"] == "/" else property_data["BASE_PATH"]
     else:
         return ""
 
 
-def generate_path(p, s):
+def generate_path(property_data, system_module):
     if p:
-        if "BASE_PATH" not in p.keys():
-            if s == "MIS":
+        if "BASE_PATH" not in property_data.keys():
+            if system_module == "MIS":
                 return "/mis"
-            elif s == "PORTAL":
+            elif system_module == "PORTAL":
                 return "/"
             else:
                 raise Exception("parameter error")
-        return generate_path_common(p, False)
+        return generate_path_common(property_data, False)
     else:
         return ""
 
