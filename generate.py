@@ -281,8 +281,6 @@ def create_files():
     with open("docker-compose.json", "w") as json_file:
         json.dump(str_json, json_file, indent=4, ensure_ascii=False)
 
-
-
     return files
 
 
