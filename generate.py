@@ -111,7 +111,7 @@ def generate_path_common(property_data, is_common):
 
 
 def generate_path(property_data, system_module):
-    if p:
+    if property_data:
         if "BASE_PATH" not in property_data.keys():
             if system_module == "MIS":
                 return "/mis"
@@ -119,7 +119,10 @@ def generate_path(property_data, system_module):
                 return "/"
             else:
                 raise Exception("parameter error")
-        return generate_path_common(property_data, False)
+        if cfg.COMMON["BASE_PATH"] != "/":
+            return generate_path_common(property_data, True)
+        else:
+            return generate_path_common(property_data, False)
     else:
         return ""
 
