@@ -18,10 +18,10 @@ python generate.py
 
 ```shell
 # 启动服务
-sh compose.sh up -d
+./compose.sh up -d
 
 # 停止服务
-sh compose.sh down
+./compose.sh down
 ```
 
 ## 日志收集说明
