@@ -116,7 +116,10 @@ def generate_path(property_data, system_module):
             if system_module == "MIS":
                 return "/mis"
             elif system_module == "PORTAL":
-                return "/"
+                if cfg.COMMON["BASE_PATH"] != "/":
+                    return ""
+                else:
+                    return "/"
             else:
                 raise Exception("parameter error")
         if cfg.COMMON["BASE_PATH"] != "/":
