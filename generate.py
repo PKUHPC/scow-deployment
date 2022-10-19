@@ -150,7 +150,7 @@ def create_log_service():
 
 
 def create_gateway_service():
-    gw_ports = [("80", "80")]
+    gw_ports = [(cfg.COMMON["PORT"], "80")]
     gw_env = {
         "BASE_PATH": generate_path_common(cfg.COMMON, True),
         "PORTAL_PATH": generate_path(cfg.PORTAL, "PORTAL"),
