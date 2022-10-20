@@ -270,7 +270,7 @@ def create_files():
             compose_f = open("compose.sh", "r")
             compose_shell = compose_f.read()
             db_cmd = " exec db mysql -uroot -p'" + db_passwd + "'"
-            shell_str = compose_shell.replace('python generate.py', '# Connect database script').replace("$@", db_cmd)
+            shell_str = compose_shell.replace('python generate.py', '').replace("$@", db_cmd).strip()
             compose_f.close()
 
             file.write(shell_str)
