@@ -247,14 +247,6 @@ def create_services():
     return com
 
 
-def cmd_is_exist(cmd):
-    try:
-        subprocess.check_output(cmd, shell=True)
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
-
 def chmod_shell_script(script_name):
     os.chmod(script_name, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
 
@@ -267,13 +259,13 @@ def create_files():
         with open("db.sh", "w") as file:
             db_passwd = cfg.MIS["DB_PASSWORD"]
 
-            compose_f = open("compose.sh", "r")
-            compose_shell = compose_f.read()
-            db_cmd = " exec db mysql -uroot -p'" + db_passwd + "'"
-            shell_str = compose_shell.replace('python generate.py', '').replace("$@", db_cmd).strip()
-            compose_f.close()
+            content = "if docker compose &> /dev/null; then compose='docker compose';\n" \
+                      "elif docker-compose &> /dev/null; then compose='docker-compose';\n" \
+                      "else echo -e 'Docker Compose is not installed, refer to this connection for installation:\n" \
+                      "https://docs.docker.com/compose/install/linux/#install-the-plugin-manually'; exit 1; fi\n" \
+                      "$compose -f docker-compose.json  exec db mysql -uroot -p'" + db_passwd + "'"
 
-            file.write(shell_str)
+            file.write(content)
             chmod_shell_script("db.sh")
     else:
         files = files + " generated successfully!"

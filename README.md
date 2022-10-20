@@ -2,7 +2,7 @@
 
 https://pkuhpc.github.io/SCOW/docs/common/deployment
 
-## 编写并生成配置文件
+## 编写配置文件
 
 ```shell
 # 1. 复制配置文件
@@ -10,10 +10,8 @@ cp config-example.py config.py
 
 # 2，根据需求修改config.py
 
-# 3. 生成文件，每次修改了config.py都需要重新运行generate.py脚本以生成对应的docker-compose文件
-python generate.py
 ```
-
+> 每次运行`./compose.sh ××× `时，会根据最新`config.py`的重新生成`docker-compose.json`和`db.sh`文件
 ## 服务启动与停止
 
 ```shell
