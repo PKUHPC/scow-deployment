@@ -13,4 +13,3 @@ config
 /test.json
 /config.py
 /__pycache__
-/compose.sh

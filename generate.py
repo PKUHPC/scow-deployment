@@ -101,7 +101,8 @@ def generate_image(name, postfix):
 def generate_path_common(property_data, is_common):
     if property_data:
         if property_data["BASE_PATH"] != "/" and (
-                property_data["BASE_PATH"].isspace() or property_data["BASE_PATH"].endswith("/") or not property_data["BASE_PATH"].startswith("/")):
+                property_data["BASE_PATH"].isspace() or property_data["BASE_PATH"].endswith("/") or not property_data[
+            "BASE_PATH"].startswith("/")):
             raise Exception("path should start with '/' and cannot end with '/' or be empty ")
         else:
             ret = "" if is_common else "/"
@@ -259,26 +260,20 @@ def chmod_shell_script(script_name):
 
 
 def create_files():
-    files = "docker-compose.json, compose.sh "
-    cmd_str = ""
-    with open("compose.sh", "w") as file:
-        if cmd_is_exist("docker compose"):
-            cmd_str = "docker compose"
-        elif cmd_is_exist("docker-compose"):
-            cmd_str = "docker-compose"
-        else:
-            raise Exception("Docker Compose is not installed, refer to this connection for installation: "
-                            "https://docs.docker.com/compose/install/linux/#install-the-plugin-manually")
-
-        file.write(cmd_str + " -f docker-compose.json $@")
-        chmod_shell_script("compose.sh")
-
+    files = "docker-compose.json"
     if cfg.MIS:
         files = files + " and db.sh generated successfully!"
         # 生成 db.sh文件
         with open("db.sh", "w") as file:
             db_passwd = cfg.MIS["DB_PASSWORD"]
-            file.write(cmd_str + " -f docker-compose.json exec db mysql -uroot -p'" + db_passwd + "'")
+
+            compose_f = open("compose.sh", "r")
+            compose_shell = compose_f.read()
+            db_cmd = " exec db mysql -uroot -p'" + db_passwd + "'"
+            shell_str = compose_shell.replace('python generate.py', '# Connect database script').replace("$@", db_cmd)
+            compose_f.close()
+
+            file.write(shell_str)
             chmod_shell_script("db.sh")
     else:
         files = files + " generated successfully!"
