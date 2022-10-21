@@ -25,6 +25,15 @@ services:
     image: redis:alpine
     restart: unless-stopped
 
+  portal-server:
+    image: $IMAGE_BASE/portal-server:$IMAGE_TAG
+    restart: unless-stopped
+    volumes:
+      - "/etc/hosts:/etc/hosts"
+      - "./config:/etc/scow"
+      - "~/.ssh:/root/.ssh"
+    profiles: [ "portal" ]
+
   portal-web:
     image: $IMAGE_BASE/portal-web-${PORTAL_IMAGE_POSTFIX-root}:$IMAGE_TAG
     restart: unless-stopped
@@ -35,7 +44,6 @@ services:
     volumes:
       - "/etc/hosts:/etc/hosts"
       - "./config:/etc/scow"
-      - "~/.ssh:/root/.ssh"
     profiles: [ "portal" ]
 
   db:
