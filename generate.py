@@ -173,6 +173,16 @@ def create_auth_service():
     return auth
 
 
+def create_portal_server_service():
+    ps_volumes = {
+        "/etc/hosts": "/etc/hosts",
+        "./config": "/etc/scow",
+        "~/.ssh": "/root/.ssh"
+    }
+    portal_server = Service("portal-server", generate_image("portal-server", None), None, ps_volumes, None)
+    return portal_server
+
+
 def create_portal_web_service():
     pw_env = {
         "BASE_PATH": generate_path_common(cfg.COMMON, True),
@@ -182,7 +192,7 @@ def create_portal_web_service():
     pw_volumes = {
         "/etc/hosts": "/etc/hosts",
         "./config": "/etc/scow",
-        "~/.ssh": "/root/.ssh"
+        # "~/.ssh": "/root/.ssh"
     }
     portal_web = Service("portal-web", generate_image("portal-web", cfg.PORTAL["IMAGE_POSTFIX"]), None,
                          pw_volumes, pw_env)
@@ -238,6 +248,7 @@ def create_services():
 
     if cfg.PORTAL:
         com.add_service(create_portal_web_service())
+        com.add_service(create_portal_server_service())
 
     if cfg.MIS:
         com.add_service(create_db_service())
