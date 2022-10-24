@@ -22,6 +22,8 @@ cp config-example.py config.py
 ./compose.sh down
 ```
 
+> `./compose.sh`支持所有基于`Docker Compose`文件的`docker-compose`命令，如：up、down、ps、restart等。
+
 ## 日志收集说明
 
 前提是开启了日志收集功能。各服务日志收集在配置的参数`FLUENTD.LOG_DIR`目录下：
