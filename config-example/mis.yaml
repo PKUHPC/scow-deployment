@@ -1,9 +1,9 @@
-# 管理系统数据库的信息。可以不修改
+# 管理系统数据库的信息。
+# 如果直接使用scow-deployment提供的数据库，此部分内容不修改
 db:
   host: db
   port: 3306
   user: root
-  password: mysqlrootpassword
   dbName: scow
 
 # 获取作业相关配置
