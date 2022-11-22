@@ -57,7 +57,7 @@ FLUENTD = {
 # 默认使用自带认证系统
 #
 # AUTH = {
-#   # 镜像地址
+#   # 镜像地址。必填，只要是能访问的镜像地址即可。
 #   "IMAGE": "ghcr.io/pkuhpc/scow-auth:master",
  
 #   # 端口映射（可选）
@@ -68,7 +68,7 @@ FLUENTD = {
 #   #   "KEY": "123"
 #   # },
  
-#   # 卷映射。
+#   # 卷映射（可选）
 #   # 默认添加/etc/hosts:/etc/hosts和./config:/etc/scow
 #   # 可选添加其他映射
 #   # "VOLUMES": {
