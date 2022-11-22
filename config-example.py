@@ -51,3 +51,27 @@ FLUENTD = {
 # 若不部署日志收集服务，FLUENTD = False
 # FLUENTD = False
 
+#
+# ------ 自定义认证系统 -------
+# 如果使用自带认证系统，请不要修改此配置
+# 默认使用自带认证系统
+#
+# AUTH = {
+#   # 镜像地址
+#   "IMAGE": "ghcr.io/pkuhpc/scow-auth:master",
+ 
+#   # 端口映射（可选）
+#   # "PORTS": ["80:80", "3302:3302"],
+ 
+#   # 环境变量（可选）
+#   # "ENV": {
+#   #   "KEY": "123"
+#   # },
+ 
+#   # 卷映射。
+#   # 默认添加/etc/hosts:/etc/hosts和./config:/etc/scow
+#   # 可选添加其他映射
+#   # "VOLUMES": {
+#   #   "./test.py": "/etc/test.py"  ,
+#   # }
+# }

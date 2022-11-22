@@ -90,6 +90,8 @@ def dict_to_array(dict_data, *parameter):
             arr.append(key + ":" + dict_data[key])
     return arr
 
+def get_value_or_default(obj, key, default):
+    return obj[key] if key in obj else default
 
 def generate_image(name, postfix):
     if postfix is None:
@@ -162,13 +164,31 @@ def create_gateway_service():
 
 
 def create_auth_service():
-    au_env = {
-        "BASE_PATH": generate_path_common(cfg.COMMON, True)
-    }
+
+    auth_service_name = "auth"
+
     au_volumes = {
         "/etc/hosts": "/etc/hosts",
         "./config": "/etc/scow"
     }
+
+    if hasattr(cfg, "AUTH") and cfg.AUTH is not None:
+
+        if "VOLUMES" in cfg.AUTH:
+            au_volumes.update(cfg.AUTH["VOLUMES"])
+
+        return Service(
+            auth_service_name, 
+            cfg.AUTH["IMAGE"], 
+            get_value_or_default(cfg.AUTH, "PORTS", None),
+            au_volumes,
+            get_value_or_default(cfg.AUTH, "ENV", None),
+        )
+
+    au_env = {
+        "BASE_PATH": generate_path_common(cfg.COMMON, True)
+    }
+
     auth = Service("auth", generate_image("auth", None), None, au_volumes, au_env)
     return auth
 
