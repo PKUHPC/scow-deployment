@@ -130,7 +130,12 @@ def generate_path(property_data, system_module):
         else:
             return generate_path_common(property_data, False)
     else:
-        return ""
+        if system_module == "MIS":
+            return "/mis"
+        elif system_module == "PORTAL":
+            return "/"
+        else:
+            return ""
 
 
 def create_log_service():
