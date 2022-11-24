@@ -255,6 +255,17 @@ def create_mis_web_service():
     mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, mv_volumes, mv_env)
     return mis_web
 
+def create_proxy_service():
+    return Service(
+        "proxy",
+        generate_image("proxy", None),
+        None,
+        { 
+            "/etc/hosts": "/etc/hosts",
+            "./config": "/etc/scow",
+        },
+        None
+    )
 
 def create_services():
     com = Compose()
@@ -269,6 +280,7 @@ def create_services():
     if cfg.PORTAL:
         com.add_service(create_portal_web_service())
         com.add_service(create_portal_server_service())
+        com.add_service(create_proxy_service())
 
     if cfg.MIS:
         com.add_service(create_db_service())
