@@ -109,7 +109,6 @@ def generate_image(name, postfix):
     else:
         return cfg.COMMON["IMAGE_BASE"] + "/" + name + "-" + postfix + ":" + cfg.COMMON["IMAGE_TAG"]
 
-
 def create_log_service():
     # 创建日志收集目录 mkdir -p ***
     if os.path.exists(cfg.FLUENTD["LOG_DIR"]):
