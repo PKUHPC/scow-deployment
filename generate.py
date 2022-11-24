@@ -6,6 +6,16 @@ import stat
 import config as cfg
 import subprocess
 
+# set default value
+PORTAL_PATH = "/"
+if cfg.PORTAL and hasattr(cfg.PORTAL, "BASE_PATH"):
+    PORTAL_PATH = cfg.PORTAL["BASE_PATH"]
+
+MIS_PATH = "/mis"
+if cfg.MIS and hasattr(cfg.MIS, "BASE_PATH"):
+    MIS_PATH = cfg.MIS["BASE_PATH"]
+
+BASE_PATH = cfg.COMMON.get("BASE_PATH", "/")
 
 class Service:
     def __init__(self, name, image, ports, volumes, environment):
@@ -100,39 +110,6 @@ def generate_image(name, postfix):
         return cfg.COMMON["IMAGE_BASE"] + "/" + name + "-" + postfix + ":" + cfg.COMMON["IMAGE_TAG"]
 
 
-def generate_path_common(property_data, is_common):
-    if property_data:
-        if property_data["BASE_PATH"] != "/" and (
-                property_data["BASE_PATH"].isspace() or property_data["BASE_PATH"].endswith("/") or not property_data[
-            "BASE_PATH"].startswith("/")):
-            raise Exception("path should start with '/' and cannot end with '/' or be empty ")
-        else:
-            ret = "" if is_common else "/"
-            return ret if property_data["BASE_PATH"] == "/" else property_data["BASE_PATH"]
-    else:
-        return ""
-
-
-def generate_path(property_data, system_module):
-    if property_data:
-        if "BASE_PATH" not in property_data.keys():
-            if system_module == "MIS":
-                return "/mis"
-            elif system_module == "PORTAL":
-                if cfg.COMMON["BASE_PATH"] != "/":
-                    return ""
-                else:
-                    return "/"
-            else:
-                raise Exception("parameter error")
-        if cfg.COMMON["BASE_PATH"] != "/":
-            return generate_path_common(property_data, True)
-        else:
-            return generate_path_common(property_data, False)
-    else:
-        return ""
-
-
 def create_log_service():
     # 创建日志收集目录 mkdir -p ***
     if os.path.exists(cfg.FLUENTD["LOG_DIR"]):
@@ -155,11 +132,14 @@ def create_log_service():
 def create_gateway_service():
     gw_ports = [(str(cfg.COMMON["PORT"]), "80")]
     gw_env = {
-        "BASE_PATH": generate_path_common(cfg.COMMON, True),
-        "PORTAL_PATH": generate_path(cfg.PORTAL, "PORTAL"),
-        "MIS_PATH": generate_path(cfg.MIS, "MIS")
+        "BASE_PATH": BASE_PATH,
+        "PORTAL_PATH":  PORTAL_PATH,
+        "MIS_PATH": MIS_PATH,
     }
-    gateway = Service("gateway", generate_image("gateway", None), gw_ports, None, gw_env)
+    gateway = Service("gateway", generate_image("node-gateway", None), gw_ports, {
+        "/etc/hosts": "/etc/hosts",
+        "./config": "/etc/scow"
+    }, gw_env)
     return gateway
 
 
@@ -186,7 +166,7 @@ def create_auth_service():
         )
 
     au_env = {
-        "BASE_PATH": generate_path_common(cfg.COMMON, True)
+        "BASE_PATH": BASE_PATH,
     }
 
     auth = Service("auth", generate_image("auth", None), None, au_volumes, au_env)
@@ -205,8 +185,8 @@ def create_portal_server_service():
 
 def create_portal_web_service():
     pw_env = {
-        "BASE_PATH": generate_path_common(cfg.COMMON, True),
-        "MIS_URL": generate_path(cfg.MIS, "MIS"),
+        "BASE_PATH": BASE_PATH,
+        "MIS_URL": MIS_PATH,
         "MIS_DEPLOYED": "true" if cfg.MIS else "false"
     }
     pw_volumes = {
@@ -245,8 +225,8 @@ def create_mis_server_service():
 
 def create_mis_web_service():
     mv_env = {
-        "BASE_PATH": generate_path_common(cfg.COMMON, True),
-        "PORTAL_URL": generate_path(cfg.PORTAL, "PORTAL"),
+        "BASE_PATH": BASE_PATH,
+        "PORTAL_URL": PORTAL_PATH,
         "PORTAL_DEPLOYED": "true" if cfg.PORTAL else "false"
     }
     mv_volumes = {
@@ -254,18 +234,6 @@ def create_mis_web_service():
     }
     mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, mv_volumes, mv_env)
     return mis_web
-
-def create_proxy_service():
-    return Service(
-        "proxy",
-        generate_image("proxy", None),
-        None,
-        { 
-            "/etc/hosts": "/etc/hosts",
-            "./config": "/etc/scow",
-        },
-        None
-    )
 
 def create_services():
     com = Compose()
@@ -280,7 +248,6 @@ def create_services():
     if cfg.PORTAL:
         com.add_service(create_portal_web_service())
         com.add_service(create_portal_server_service())
-        com.add_service(create_proxy_service())
 
     if cfg.MIS:
         com.add_service(create_db_service())
