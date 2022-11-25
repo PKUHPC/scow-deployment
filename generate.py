@@ -134,7 +134,7 @@ def create_gateway_service():
     is_base_path_root = BASE_PATH == "/"
 
     gw_env = {
-        "BASE_PATH": "" if is_base_path_root else BASE_PATH,
+        "BASE_PATH": BASE_PATH,
         "PORTAL_PATH": PORTAL_PATH[1:] if is_base_path_root else PORTAL_PATH,
         "MIS_PATH": MIS_PATH[1:] if is_base_path_root else MIS_PATH,
     }
