@@ -131,10 +131,12 @@ def create_log_service():
 def create_gateway_service():
     gw_ports = [(str(cfg.COMMON["PORT"]), "80")]
 
+    is_base_path_root = BASE_PATH == "/"
+
     gw_env = {
-        "BASE_PATH": "" if BASE_PATH == "/" else BASE_PATH,
-        "PORTAL_PATH":  PORTAL_PATH,
-        "MIS_PATH": MIS_PATH,
+        "BASE_PATH": "" if is_base_path_root else BASE_PATH,
+        "PORTAL_PATH": PORTAL_PATH[1:] if is_base_path_root else PORTAL_PATH,
+        "MIS_PATH": MIS_PATH[1:] if is_base_path_root else MIS_PATH,
     }
 
     gateway = Service("gateway", generate_image("gateway", None), gw_ports, {
