@@ -151,7 +151,8 @@ def create_auth_service():
 
     au_volumes = {
         "/etc/hosts": "/etc/hosts",
-        "./config": "/etc/scow"
+        "./config": "/etc/scow",
+        "~/.ssh": "/root/.ssh",
     }
 
     if hasattr(cfg, "AUTH") and cfg.AUTH is not None:
