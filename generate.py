@@ -6,16 +6,26 @@ import stat
 import config as cfg
 import subprocess
 
+def check_path_format(name, value):
+    if value != "/" and value.endswith("/"):
+        print(name + " should not end with /")
+        exit(1)
+
 # set default value
+BASE_PATH = cfg.COMMON.get("BASE_PATH", "/")
+check_path_format("COMMON.BASE_PATH", BASE_PATH)
+
 PORTAL_PATH = "/"
 if cfg.PORTAL and hasattr(cfg.PORTAL, "BASE_PATH"):
     PORTAL_PATH = cfg.PORTAL["BASE_PATH"]
+check_path_format("PORTAL.BASE_PATH", PORTAL_PATH)
 
 MIS_PATH = "/mis"
 if cfg.MIS and hasattr(cfg.MIS, "BASE_PATH"):
     MIS_PATH = cfg.MIS["BASE_PATH"]
+check_path_format("MIS.BASE_PATH", MIS_PATH)
 
-BASE_PATH = cfg.COMMON.get("BASE_PATH", "/")
+
 
 class Service:
     def __init__(self, name, image, ports, volumes, environment):
