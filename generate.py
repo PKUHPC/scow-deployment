@@ -25,8 +25,6 @@ if cfg.MIS and hasattr(cfg.MIS, "BASE_PATH"):
     MIS_PATH = cfg.MIS["BASE_PATH"]
 check_path_format("MIS.BASE_PATH", MIS_PATH)
 
-
-
 class Service:
     def __init__(self, name, image, ports, volumes, environment):
         self.name = name
@@ -247,7 +245,10 @@ def create_mis_web_service():
     return mis_web
 
 def create_novnc_client():
-    return Service("novnc", generate_image("novnc-client-docker", None), None, None, {
+
+    url = "ghcr.io/pkuhpc/novnc-client-docker:master"
+
+    return Service("novnc", url, None, None, {
         "BASE_PATH": BASE_PATH if BASE_PATH.endwith("/") else (BASE_PATH + "/"),
     })
 
