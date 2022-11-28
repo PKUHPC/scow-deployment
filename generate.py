@@ -248,9 +248,7 @@ def create_novnc_client():
 
     url = getattr(cfg.PORTAL, "NOVNC_IMAGE", "ghcr.io/pkuhpc/novnc-client-docker:master")
 
-    return Service("novnc", url, None, None, {
-        "BASE_PATH": BASE_PATH if BASE_PATH.endswith("/") else (BASE_PATH + "/"),
-    })
+    return Service("novnc", url, None, None, None)
 
 def create_services():
     com = Compose()
