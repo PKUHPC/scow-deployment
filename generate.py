@@ -246,7 +246,7 @@ def create_mis_web_service():
 
 def create_novnc_client():
 
-    url = getattr(config.PORTAL, "NOVNC_IMAGE", "ghcr.io/pkuhpc/novnc-client-docker:master")
+    url = getattr(cfg.PORTAL, "NOVNC_IMAGE", "ghcr.io/pkuhpc/novnc-client-docker:master")
 
     return Service("novnc", url, None, None, {
         "BASE_PATH": BASE_PATH if BASE_PATH.endwith("/") else (BASE_PATH + "/"),
