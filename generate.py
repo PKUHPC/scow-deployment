@@ -246,6 +246,11 @@ def create_mis_web_service():
     mis_web = Service("mis-web", generate_image("mis-web", cfg.MIS["IMAGE_POSTFIX"]), None, mv_volumes, mv_env)
     return mis_web
 
+def create_novnc_client():
+    return Service("novnc", generate_image("novnc-client-docker", None), None, None, {
+        "BASE_PATH": BASE_PATH if BASE_PATH.endwith("/") else (BASE_PATH + "/"),
+    })
+
 def create_services():
     com = Compose()
 
@@ -259,6 +264,7 @@ def create_services():
     if cfg.PORTAL:
         com.add_service(create_portal_web_service())
         com.add_service(create_portal_server_service())
+        com.add_service(create_novnc_client())
 
     if cfg.MIS:
         com.add_service(create_db_service())
