@@ -20,9 +20,12 @@ import subprocess
 def get_nested(obj, keys, default_val = None):
   if obj == None:
     return default_val
-  def get(o, key):
-    return getattr(o, key, default_val)
-  return functools.reduce(get, keys, obj)
+  for key in keys:
+    if hasattr(obj, key):
+      obj = getattr(obj, key)
+    else:
+      return default_val
+  return obj
 
 
 def check_path_format(name, value):
@@ -135,9 +138,6 @@ def dict_to_array(dict_data, *parameter):
         else:
             arr.append(key + ":" + dict_data[key])
     return arr
-
-def get_value_or_default(obj, key, default):
-    return obj[key] if key in obj else default
 
 def generate_image(name, postfix):
     if postfix is None:
