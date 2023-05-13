@@ -1,3 +1,10 @@
+
+# 请使用scow-cli！
+
+scow-deployment已经不再维护。请使用[scow-cli](https://pkuhpc.github.io/SCOW/docs/deploy/install/scow-cli)部署SCOW。
+
+具体请参考[部署文档](https://pkuhpc.github.io/SCOW/docs/deploy/install)
+
 # SCOW 本地部署
 
 https://pkuhpc.github.io/SCOW/docs/deploy/SCOW
